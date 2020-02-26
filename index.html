@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>뮤직박스</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <style>
+            @font-face {
+                font-family: TimonMonsori-ttf;
+                src: url(/fonts/TmonMonsori.ttf.ttf);
+            }
+            body{
+                margin: 0;
+            }
+            header{
+                width:100%;
+                min-width: 1000px;
+                
+            }
+            header h1{
+                font-family: TimonMonsori-ttf;
+                color:blueviolet;
+                padding: 0 20px;
+            }
+            .box{
+                border: solid 3px #d8d8d8;
+                width:600px;
+                padding: 30px 30px 20px 30px;
+                margin: 0 0 0 10px;
+                border-radius: 20px;
+                background-color: #fcfcfc;
+            }
+            .play_control{
+                margin:10px 10px 10px 0;
+            }
+            .time{
+                text-align: right;
+            }
+            .prePlay, .togglePlay, .nextPlay{
+                display: inline-block;
+            }
+            .left_triangle{
+                position: absolute;
+                width:20px;
+                height:20px;
+                border-color: #fff gray #fff #fff;
+                border-width: 10px 20px 10px 0px;
+                border-style: solid ;
+                padding: 0;
+                margin: 11px 0 0 13px;
+            }
+            .right_triangle{
+                position: absolute;
+                width:20px;
+                height:20px;
+                border-color: #fff #fff #fff gray;
+                border-width: 10px 0px 10px 20px;
+                border-style: solid ;
+                padding: 0;
+                margin: 12px 0 0 15px;
+            }
+            .left_straight{
+                position: absolute;
+                z-index: 5;
+                width:4px;
+                height:14px;
+                border-color: gray;
+                border-width: 0px 4px 0px 0px;
+                border-style: solid;
+                margin: 14px 0 0 11px;
+                padding: 0;
+            }
+            .right_straight{
+                position: absolute;
+                z-index: 5;
+                width:4px;
+                height:14px;
+                border-color: gray;
+                border-width: 0px 4px 0px 0px;
+                border-style: solid;
+                margin: 15px 0 0 32px;
+                padding: 0;
+            }
+            
+            .vertical-line{
+                position: absolute;
+                width:15px;
+                height:20px;
+                border-color: #fff #fff #fff gray;
+                border-width: 0px 0px 0px 15px;
+                border-style: double ;
+                background: #fff;
+                margin: 12px 0 0 15px;
+                padding: 0;
+            }
+            .circle{
+                position: relative;
+                display: inline-block;
+                z-index: 10;
+                width:40px;
+                height:40px;
+                border:solid 2px gray;
+                border-radius: 40px;
+                cursor: pointer;
+            }
+            .time{
+                margin: 10px 0 0 0;
+                font-family:"고딕"; 
+                font-weight: bold;
+            }
+            #duration{
+                color: gray;
+            }
+            .playlist{
+                margin: 20px 0 0 0;
+                border-top:solid 1px #bdbcbc; 
+            }
+            .etc_control img{
+                width:35px;
+                height:30px;
+                cursor: pointer;
+            }
+            #song_title{
+                margin: 0 0 10px 0px;
+                font-size: 22px;
+                font-weight: bold;
+                font-family: "나눔고딕";
+            }
+            #song_img{
+                width:250px;
+                height: 250px;
+            }
+            .right_area{
+                display: inline-block;
+                width: 53%;
+                padding: 0 0 0 15px;
+            }
+            .playlist{
+                margin:10px 0 0 0;
+                padding: 10px 0 0 0;
+            }
+
+            .volume-slider-con{
+                display: inline-block;
+                position:relative;
+                height:10px;
+                width:150px;
+                background-color:#ddd;
+                margin:0 0 8.5px 10px;
+                border-radius: 20px;
+            }
+            .volume-slider{
+                position:relative;
+                width:80%;
+                height:100%;
+                background-color:#d14cff;
+                border-radius: 20px;
+            }
+            .volume-slider-circle{
+                position:absolute;
+                top: -5px;
+                width: 20px;
+                height: 20px;
+                background-color:#fff; 
+                border: solid gray 1px;
+                border-radius: 10px;
+                cursor: pointer;
+                outline: none;
+            }
+            .progress_base{
+                display: inline-block;
+                position: relative;
+                width:600px;
+                height:20px;
+                margin: 20px 0 0 0;
+                background-color: black;
+            }
+            .progress_bar{
+                width:0;
+                height:100%;
+                background-color:blueviolet;
+            }
+            .progress-square{
+                position:absolute;
+                z-index: 10;
+                width: 6px;
+                height: 20px;
+                background-color:#cd96ef;
+                cursor: pointer;
+                border: 0;
+                outline: none;
+            }
+        </style>
+    </head>
+    <body oncontextmenu='return false' onselectstart='return false'>
+        <header><h1>MusicBox</h1></header>
+        <div class="box">
+            <img id="song_img"></img>
+            <div class="right_area">
+                    <div id="song_title"></div>
+                    <div class="play_control">
+                        <div class="prePlay">
+                            <label style="display: none">이전</label>
+                            <button class="left_straight"></button>
+                            <button class="left_triangle"></button>
+                            <div class="circle"></div>
+                        </div>
+        
+                        <div class="togglePlay">
+                            <label style="display: none">재생</label>
+                            <button class="right_triangle"></button>
+                            <div class="circle"></div>
+                        </div>
+        
+                        <div class="nextPlay">
+                            <label style="display: none">다음</label>
+                            <button class="right_straight"></button>
+                            <button class="right_triangle"></button>
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                    <span class="etc_control">
+                            <img class="repeat" src="/img/repeat_off.png" alt="반복안함">
+                            <img class="suffle" src="/img/suffle_off.png">
+                            <img class="sound" src="/img/sound.png" style="margin-left: 20px;">
+                            <div class="volume-slider-con">
+                                    <div class="volume-slider"></div>
+                                    <button class="volume-slider-circle"></button>
+                            </div>
+                    </span>
+            </div>
+            
+
+            <div class="progress_base">
+                <div class="progress-square"></div>
+                <div class="progress_bar"></div>
+            </div>
+
+            <div class="time">
+                <span id="current_time"></span> / 
+                <span id="duration"></span>
+            </div>
+            
+            <div class="playlist">
+                
+            </div>
+
+
+        </div>
+        
+    </body>
+    <script>
+        
+        $(document).ready(function(){
+
+            var music = [
+                {   
+                    title : '박혜원 - 시든 꽃에 물을 주듯',
+                    oggPath : '/mp3/TheLonelyBloomStandsAlone.ogg',
+                    mp3Path : '/mp3/TheLonelyBloomStandsAlone.mp3',
+                    imgPath : '/songimg/k.jpg'
+                },
+                {   
+                    title : '10cm - 나의 어깨에 기대어요',
+                    oggPath : '/mp3/Lean_on_my_shoulder.ogg',
+                    mp3Path : '/mp3/Lean_on_my_shoulder.mp3',
+                    imgPath : '/songimg/j.jpg'
+                },
+                {   
+                    title : 'AOA - 너나 해',
+                    oggPath : '/mp3/You_do_it.ogg',
+                    mp3Path : '/mp3/You_do_it.mp3',
+                    imgPath : '/songimg/g.jpg'
+                },
+                {   
+                    title : '볼빨간사춘기(BOL4) - 워커홀릭',
+                    oggPath : '/mp3/Walkerholic.ogg',
+                    mp3Path : '/mp3/Walkerholic.mp3',
+                    imgPath : '/songimg/i.jpg'
+                },
+                {   
+                    title : '황인욱 - 포장마차',
+                    oggPath : '/mp3/snack_cart.ogg',
+                    mp3Path : '/mp3/snack_cart.mp3',
+                    imgPath : '/songimg/h.jpg'
+                },
+                {   
+                    title : '거미 - 기억해줘요 내 모든 날과 그때를',
+                    oggPath : '/mp3/gummy-Remember_Me.ogg',
+                    mp3Path : '/mp3/gummy-Remember_Me.mp3',
+                    imgPath : '/songimg/a.jpg'
+                },
+                {   
+                    title : '헤이즈 (HEIZE) - We don`t talk together(Feat. 기리보이)',
+                    oggPath : '/mp3/heize-We_dont_talk_together.ogg',
+                    mp3Path : '/mp3/heize-We_dont_talk_together.mp3',
+                    imgPath : '/songimg/b.jpg'
+                },
+                {   
+                    title : '박재범 - All I Wanna Do (K) (Feat. Hoody, Loco)',
+                    oggPath : '/mp3/JayPark_AllIWannaDo.ogg',
+                    mp3Path : '/mp3/JayPark_AllIWannaDo.mp3',
+                    imgPath : '/songimg/c.jpg'
+                },
+                {   
+                    title : '모모랜드 - 뿜뿜',
+                    oggPath : '/mp3/MOMOLAND-BBoomBBoom.ogg',
+                    mp3Path : '/mp3/MOMOLAND-BBoomBBoom.mp3',
+                    imgPath : '/songimg/d.jpg'
+                },
+                {    
+                    title : '선미 - 주인공',
+                    oggPath : '/mp3/Sunmi_Heroine.ogg',
+                    mp3Path : '/mp3/Sunmi_Heroine.mp3',
+                    imgPath : '/songimg/e.jpg'
+                },
+                {   
+                    title : '환희 (Hwanhee) - 바람이 되어서라도',
+                    oggPath : '/mp3/Hwanhee-Eveninthewind.ogg',
+                    mp3Path : '/mp3/Hwanhee-Eveninthewind.mp3',
+                    imgPath : '/songimg/f.jpg'
+                }
+            ];
+
+            
+            function MusicBoxApp(music){
+                this.music = music;                                                  //곡 데이터
+                this.audio_mp3 = new Audio(this.music[this.currentIdx].mp3Path),     //오디오 객체(.mp3)
+                this.audio_ogg = new Audio(this.music[this.currentIdx].oggPath),     //오디오 객체(.ogg) 
+                this.togglePlayEvent();
+                this.preSongPlayEvent();
+                this.nextSongPlayEvent();
+                this.loadedSongEvent();
+                this.timeUpdateSongEvent();
+                this.endedSongEvent();
+                this.repeatEvent();
+                this.suffleEvent();
+                this.buttonHover();
+                $('#song_img').attr('src',this.music[this.currentIdx].imgPath);     //이미지 출력
+                $('#song_title').text(this.music[this.currentIdx].title);           //제목 출력
+
+                //진행 막대 초기화
+                this.p_bar = this.progressBar;
+                this.p_bar.square.style.left = this.p_bar.pInner.offsetWidth - (this.p_bar.square.offsetWidth/2) + 'px';
+                this.p_bar.progressBarEvent();
+
+                //사운드 막대 초기화
+                this.s_bar = this.soundBar;
+                this.audio_ogg.volume = this.s_bar.sInner.offsetWidth / this.s_bar.sound.offsetWidth;
+                this.s_bar.circle.style.left = this.s_bar.sInner.offsetWidth - (this.s_bar.circle.offsetWidth/2) +'px';
+                this.s_bar.toggleSoundEvent(this.audio_ogg);
+                this.s_bar.soundBarEvent(this.audio_ogg);
+                
+                this.mouseMoveEvent(this.p_bar, this.s_bar, this.audio_ogg);
+                this.mouseUpEvent(this.p_bar, this.s_bar, this.audio_ogg, this.audio_mp3);
+            }
+
+            MusicBoxApp.prototype = {
+                currentIdx : 0,                                                 //곡 현재 위치 
+                progressBarStop : false,                                        //진행바 정지 체크
+                repeat : 1,                                                     //반복
+                suffle : false,                                                 //셔플
+                //곡 재생,정지
+                togglePlayEvent : function(){
+                    $('.togglePlay > .circle').click(function(){
+                        if ($('.togglePlay label').text()=="재생"){
+                            this.progressBarStop=false;
+                            this.audio_ogg.play();
+                            $('.togglePlay button').removeClass('right_triangle').addClass('vertical-line');
+                            $('.togglePlay label').text('정지');
+                        }else{
+                            this.audio_ogg.pause();
+                            $('.togglePlay button').removeClass('vertical-line').addClass('right_triangle');
+                            $('.togglePlay label').text('재생');
+                        }
+                    }.bind(this));
+                },
+
+                //이전곡 재생
+                preSongPlayEvent : function(){  
+                    $('.prePlay > .circle').click(function(){
+                        this.progressBarStop=true;
+                        if (this.suffle)     //셔플
+                            this.currentIdx = this.suffleIdx();
+                        else{
+                            if (this.currentIdx == 0) this.currentIdx = this.music.length-1
+                            else this.currentIdx -= 1
+                        }
+                        this.audio_mp3.src=this.music[this.currentIdx].mp3Path;
+                        this.audio_ogg.src=this.music[this.currentIdx].oggPath;
+                        $('.togglePlay button').removeClass('vertical-line').addClass('right_triangle');
+                        $('.togglePlay label').text('재생');
+                        $('#song_img').attr('src',this.music[this.currentIdx].imgPath);
+                        $('#song_title').text(this.music[this.currentIdx].title);
+                        var p_bar = this.p_bar;
+                        p_bar.updateProgressBar(p_bar.p_base.offsetLeft);
+                    }.bind(this));
+                },
+
+                //다음곡 재생
+                nextSongPlayEvent : function(){
+                    $('.nextPlay > .circle').click(function(){
+                        this.progressBarStop=true;
+                        if (this.suffle)     //셔플
+                            this.currentIdx = this.suffleIdx();
+                        else{
+                            if (this.currentIdx < this.music.length-1) this.currentIdx +=1;
+                            else this.currentIdx = 0;
+                        }
+                        this.audio_mp3.src = this.music[this.currentIdx].mp3Path;
+                        this.audio_ogg.src = this.music[this.currentIdx].oggPath;
+                        $('.togglePlay button').removeClass('vertical-line').addClass('right_triangle');
+                        $('.togglePlay label').text('재생');
+                        $('#song_img').attr('src',this.music[this.currentIdx].imgPath);
+                        $('#song_title').text(this.music[this.currentIdx].title);
+                        var p_bar = this.p_bar;
+                        this.p_bar.updateProgressBar(this.p_bar.p_base.offsetLeft);
+                    }.bind(this));
+                },
+                
+                //노래가 로드될떄
+                loadedSongEvent : function(){
+                    this.audio_ogg.addEventListener('loadeddata',function(){
+                        var currentTime = this.convertTime(this.audio_ogg.currentTime);
+                        var duration = this.convertTime(this.audio_mp3.duration);
+                        $('#current_time').text(currentTime);
+                        $('#duration').text(duration);
+                    }.bind(this));
+                },
+
+                //노래가 진행될때
+                timeUpdateSongEvent : function(){
+                    this.audio_ogg.addEventListener('timeupdate',function(){
+                        if(this.progressBarStop) return;
+                        this.p_bar.updateTimeProgressBar(this.audio_mp3.duration, this.audio_ogg.currentTime,this.convertTime);
+                    }.bind(this));
+                },
+
+                //노래가 끝났을때
+                endedSongEvent : function(){
+                    this.audio_ogg.addEventListener('ended',function(){
+                        if (this.repeat==2){ //순환재생
+                            if (this.suffle)     //셔플재생
+                                this.currentIdx = this.suffleIdx();
+                            else{
+                                if (this.currentIdx < this.music.length-1) this.currentIdx +=1;
+                                else this.currentIdx = 0;
+                            }
+                            this.audio_mp3.src=this.music[this.currentIdx].mp3Path;
+                            this.audio_ogg.src=this.music[this.currentIdx].oggPath;
+                            $('#song_img').attr('src',this.music[this.currentIdx].imgPath);
+                            $('#song_title').text(this.music[this.currentIdx].title);
+                            this.audio_ogg.play();
+                        }
+                        else if(this.repeat==3){//1곡반복재생
+                            this.audio_ogg.play();
+                        }
+                        else{    
+                            $('.togglePlay button').removeClass('vertical-line').addClass('right_triangle');
+                            $('.togglePlay label').text('재생');
+                        }          
+                        $('#current_time').text('0:00');
+                        this.p_bar.updateProgressBar(this.p_bar.p_base.offsetLeft);
+                    }.bind(this));
+                },
+
+                //전체 mousemove
+                mouseMoveEvent : function(progressBar, soundBar, audio_ogg){
+                    document.addEventListener('mousemove',function(e){
+                        if(soundBar.s_drag){
+                            soundBar.updateSoundBar(e.clientX, audio_ogg);
+                        }
+                        if (progressBar.p_drag){
+                            progressBar.p_mousedown = true;
+                            progressBar.updateProgressBar(e.clientX);
+                        }
+                    });
+                },
+
+                //전체 mouseup
+                mouseUpEvent : function(progressBar, soundBar, audio_ogg, audio_mp3){
+                    document.addEventListener('mouseup',function(e){
+                        soundBar.s_drag = false;
+                        if (progressBar.p_mousedown){
+                            if (audio_ogg.currentTime==0) {
+                                console.log("로드");
+                                audio_ogg.load();
+                            };
+                            audio_ogg.currentTime = progressBar.currentPercentage(e.clientX, audio_mp3);
+                            if($('.togglePlay label').text()=="정지"){
+                                audio_ogg.play();
+                            }
+                            
+                        }
+                        progressBar.p_drag = false;
+                        progressBar.p_mousedown = false;
+                        
+                    });
+                },
+                
+                //반복 버튼
+                repeatEvent : function(){
+                    $('.repeat').click(function(e){
+                        if(this.repeat==1){ 
+                            e.target.src="/img/repeat_on.png";
+                            this.repeat=2;
+                        }
+                        else if (this.repeat==2) {
+                            e.target.src="/img/repeat_one.png";
+                            this.repeat=3;
+                        }
+                        else {
+                            e.target.src="/img/repeat_off.png";
+                            this.repeat=1; 
+                        }
+                    }.bind(this));
+                },
+ 
+                //셔플 버튼
+                suffleEvent : function(){
+                    $('.suffle').click(function(e){
+                        if (this.suffle) {
+                            e.target.src="/img/suffle_off.png";
+                            this.suffle=false;
+                        }
+                        else{ 
+                            e.target.src="/img/suffle_on.png";
+                            this.suffle=true;
+                        }
+                    }.bind(this));
+                },
+
+                
+                //진행막대
+                progressBar : {
+                
+                    p_base : document.querySelector('.progress_base'),
+                    pInner : document.querySelector('.progress_bar'),
+                    square : document.querySelector('.progress-square'),
+                    p_drag : false,
+                    p_mousedown : false,
+                    current_time :  document.querySelector('#current_time'),
+                    
+                    //진행 막대 업데이트
+                    updateProgressBar : function(x){
+                        var position = x - this.p_base.offsetLeft;
+                        var percentage = 100 * position / this.p_base.clientWidth;
+                        if (percentage < 0){
+                            percentage = 0;
+                        }
+                        if (percentage > 100){
+                            percentage = 100;
+                        }
+                        if (position < 0){
+                            position = 0
+                        }
+                        if(position > this.p_base.clientWidth){
+                            position = this.p_base.clientWidth;
+                        }
+                        this.pInner.style.width = percentage +"%";
+                        this.square.style.left = position - (this.square.offsetWidth/2) + "px";
+                    },
+
+                    //진행 막대 시간 및 상황 
+                    updateTimeProgressBar : function(duration, currentTime, convertTime){
+                        if(this.p_mousedown){
+                            //console.log('정지');
+                        }
+                        else{
+                            this.current_time.innerHTML = convertTime(currentTime);
+                            var percentage = currentTime / duration;
+                            var progress = this.p_base.offsetWidth * percentage;
+                            this.pInner.style.width = progress +"px";
+                            this.square.style.left = progress - (this.square.offsetWidth/2) + "px";
+                        }
+                    },
+
+                    //진행 막대 mousedown
+                    progressBarEvent : function(){
+                        this.p_base.addEventListener('mousedown',function(e){
+                            this.p_drag = true;
+                            this.p_mousedown = true;
+                            this.updateProgressBar(e.clientX);
+                        }.bind(this)); 
+                    }, 
+                    
+                    //현재 진행바 퍼센트
+                    currentPercentage : function(x, audio_mp3){
+                        var position = x - this.p_base.offsetLeft;
+                        var percentage = position / this.p_base.clientWidth;
+                        if (percentage < 0){
+                            percentage = 0;
+                        }
+                        if (percentage > 1){
+                            return 1 * audio_mp3.duration - 0.1;
+                        }
+                        return percentage * audio_mp3.duration;
+                    },
+                    
+
+                },
+
+                //사운드 막대
+                soundBar : {
+                    sound : document.querySelector('.volume-slider-con'),
+                    sInner : document.querySelector('.volume-slider'),
+                    circle : document.querySelector('.volume-slider-circle'),
+                    s_drag : false,
+                    mute : false,                                                  //뮤트
+                    currentVolume : 0,
+                    currentWidth : 0,
+                    currentLeft : 0,
+                    updateSoundBar : function (x, audio_ogg) {
+                        var percentage;
+                        var position = x - this.sound.offsetLeft;
+                        percentage = 100 * position / this.sound.clientWidth;
+                        //막대
+                        if (percentage > 100) {
+                            percentage = 100;
+                        }
+                        if (percentage < 0) {
+                            percentage = 0;
+                        }
+                        //원
+                        if(position<0){
+                            position=0
+                        }
+                        if(position>this.sound.clientWidth){
+                            position = this.sound.clientWidth;
+                        }
+
+                        this.sInner.style.width = percentage +'%';
+                        this.circle.style.left = position - (this.circle.offsetWidth/2) +'px';
+                        audio_ogg.volume = percentage / 100;
+                        
+                    },
+
+                    //사운드 on/off
+                    toggleSoundEvent : function(audio_ogg){
+                        $('.sound').click(function(e){
+                            if(this.mute){
+                                e.target.src="/img/sound.png";
+                                this.mute=false;
+                                audio_ogg.volume = this.currentVolume;
+                                this.sInner.style.width = this.currentWidth;
+                                this.circle.style.left = this.currentLeft;
+                            }else{
+                                e.target.src="/img/mute.png";
+                                this.mute=true;
+                                this.currentVolume = audio_ogg.volume;
+                                this.currentWidth = audio_ogg.volume * 100 +"%";
+                                this.currentLeft = this.sInner.offsetWidth - (this.circle.offsetWidth/2) +'px';
+                                audio_ogg.volume=0;
+                                this.sInner.style.width = 0;
+                                this.circle.style.left = - (this.circle.offsetWidth/2) +'px';
+                            }
+                            
+                        }.bind(this));
+
+                    },
+
+                    //사운드 막대 mousedown
+                    soundBarEvent : function(audio_ogg){
+                        this.sound.addEventListener('mousedown',function(e){
+                            this.s_drag = true;
+                            this.updateSoundBar(e.clientX, audio_ogg);
+                        }.bind(this));
+                    }
+ 
+                },
+
+                //셔플된 인덱스
+                suffleIdx : function(){
+                    if (this.music.length==0) return this.currentIdx;
+                    var idx;
+                    while(true){
+                        idx = Math.floor(Math.random()*this.music.length);
+                        if(idx!=this.currentIdx)
+                            return idx; 
+                    }   
+                },
+
+                //sec 변환
+                convertTime : function(time){
+                    min = Math.floor (time / 60);
+                    sec = Math.floor(time % 60);
+                    if (sec < 10)
+                        sec = "0"+sec;
+                    result  = min+":"+sec;
+                    return result;
+                },
+
+                //play,pre,next버튼 hover
+                buttonHover : function(){
+                    $('.circle').hover(function(e){
+                        var triangleNode = e.target.previousElementSibling;
+                        var triangleNodeClassName = triangleNode.className;
+                        var circleNode = e.target;
+                        var straightNode = triangleNode.previousElementSibling;
+                        if(straightNode.className=="left_straight"||straightNode.className=="right_straight") straightNode.style.borderColor="blueviolet";
+                        if(triangleNodeClassName=="left_triangle") triangleNode.style.borderColor="#fff blueviolet #fff #fff";
+                        else triangleNode.style.borderColor="#fff #fff #fff blueviolet";
+                        circleNode.style.borderColor="blueviolet";
+                        
+                    },function(e){
+                        var triangleNode = e.target.previousElementSibling;
+                        var triangleNodeClassName = triangleNode.className;
+                        var circleNode = e.target;
+                        var straightNode = triangleNode.previousElementSibling;
+                        if(straightNode.className=="left_straight"||straightNode.className=="right_straight") straightNode.style.borderColor="gray";
+                        if(triangleNodeClassName=="left_triangle") triangleNode.style.borderColor="#fff gray #fff #fff";
+                        else triangleNode.style.borderColor="#fff #fff #fff gray";
+                        circleNode.style.borderColor="gray";
+                        
+                    });
+                }
+        
+                
+
+            }
+
+            new MusicBoxApp(music);   //뮤직 생성
+            
+  
+            //진행 막대 현재위치에서 재생시간 변경 구현중 에러
+            /*  
+                크롬에서 mp3파일 currentTime값을 변경할려는 경우 0으로 초기화됨  duration값은 잘 얻어옴
+                크롬에서 ogg파일 currentTime값을 변경은 문제없지만 duration값을 얻어오지못함..(infinity-NaN)
+                크롬에서 ogg파일의 duration값을 받아오지못함..
+                IE에서는 currentTime값 변경해도 문제없지만 ogg파일의 duration값을 받아오지못함..
+                IE에서는 ogg파일의 duration값을 받아오지 못하지만 신기하게 동작는 됨
+
+            */
+            
+        });
+        
+    </script>
+
+</html>
