@@ -236,6 +236,7 @@
                 width: 400px;
                 left: 700px;
                 top: 80px;
+                margin-bottom: 50px;
             }
             .musicChartScroll > h5{
                 margin: 0;
@@ -457,8 +458,8 @@
                 this.songs = songs;                                                 //곡 데이터
                 this.song_id = this.suffleIdx(songs.length);                        //곡 랜덤으로 섞음
                 
-                this.playlist();                                                    //재생 목록 초기화
-                this.playlist = [this.song_id];                                     
+
+                this.playlist = [this.song_id];                                     //재생 목록 초기화
                 this.playIdx = 0;
                 $('.playlist').append(`<li class="playlistRow" id="${this.playIdx}">${this.songs[this.song_id].title}</li>`);
                 this.playlistTitleColorChange(this.playIdx);
@@ -902,14 +903,7 @@
 
                 //재생목록 초기화
                 playlist : function(){
-                    /*
-                    for(var i=0; i<this.songs.length; i++){
-                        var songTitle = this.songs[i].title;
-                        var substrTitle = songTitle.length > 50 ? songTitle.substring(0,50)+"..." : songTitle;
-                        var song_id = i;
-                        $('.playlist').append(`<li class="playlistRow" id="${song_id}">${substrTitle}</li>`);
-                    }
-                    */
+                    
                 },
 
                 //재생목록이벤트
@@ -953,7 +947,6 @@
             new MusicBoxApp(songs);   //뮤직 생성
             
   
-            
             /*  
                 1. 진행 막대 현재위치에서 재생시간 변경 오류
                 크롬에서 mp3파일 currentTime값을 변경할려는 경우 0으로 초기화됨  duration값은 잘 얻어옴
@@ -972,5 +965,4 @@
         });
         
     </script>
-
 </html>
