@@ -22,13 +22,14 @@
                 color:blueviolet;
                 padding: 0 20px;
             }
-            .box{
-                border: solid 3px #d8d8d8;
-                width:600px;
-                padding: 30px 30px 20px 30px;
-                margin: 0 0 0 10px;
-                border-radius: 20px;
-                background-color: #fcfcfc;
+            .musicBox{
+                width: 640px;
+                border: solid 1px #d8d8d8;
+                margin: 0 0 0 20px;
+            }
+            .playerBox{
+                padding: 20px;
+                background-color: #f1f0f39e;
             }
             .play_control{
                 margin:10px 10px 10px 0;
@@ -105,15 +106,52 @@
             }
             .time{
                 margin: 10px 0 0 0;
+                width: 600px;
                 font-family:"고딕"; 
                 font-weight: bold;
             }
             #duration{
                 color: gray;
             }
+
+            .playlistBox{
+                padding: 0 0 10px 0;
+                border-top:solid 1px #bdbcbc;
+            }
+            .playlistBox > h5{
+                padding: 10px;
+                margin: 0;
+            }
+            .playlistScroll{
+                height: 300px;
+                border-top:solid 1px #bdbcbc;
+                overflow: auto; 
+            }
+            .playlistScroll::-webkit-scrollbar {
+                width: 5px;
+                background-color: white;
+            }
+            .playlistScroll::-webkit-scrollbar-thumb {
+                background-color: #dbd8dd;
+                border-radius: 10px;
+            }
+            .playlistScroll::-webkit-scrollbar-track {
+                background-color: white;
+                border-radius: 10px;
+            }
             .playlist{
-                margin: 20px 0 0 0;
-                border-top:solid 1px #bdbcbc; 
+                margin: 0;
+                padding: 0;
+            }
+            .playlistRow{
+                list-style: none;
+                font-size: 13px;
+                font-family: 나눔바른고딕;
+                padding: 10px;
+            }
+            .playlistRow:hover{
+                cursor: pointer;
+                background-color: #ecedf7;
             }
             .etc_control img{
                 width:35px;
@@ -135,10 +173,7 @@
                 width: 53%;
                 padding: 0 0 0 15px;
             }
-            .playlist{
-                margin:10px 0 0 0;
-                padding: 10px 0 0 0;
-            }
+            
 
             .volume-slider-con{
                 display: inline-block;
@@ -194,9 +229,10 @@
     </head>
     <body oncontextmenu='return false' onselectstart='return false'>
         <header><h1>MusicBox</h1></header>
-        <div class="box">
-            <img id="song_img"></img>
-            <div class="right_area">
+        <div class="musicBox">
+            <div class="playerBox">
+                <img id="song_img"></img>
+                <div class="right_area">
                     <div id="song_title"></div>
                     <div class="play_control">
                         <div class="prePlay">
@@ -205,13 +241,11 @@
                             <button class="left_triangle"></button>
                             <div class="circle"></div>
                         </div>
-        
                         <div class="togglePlay">
                             <label style="display: none">재생</label>
                             <button class="right_triangle"></button>
                             <div class="circle"></div>
                         </div>
-        
                         <div class="nextPlay">
                             <label style="display: none">다음</label>
                             <button class="right_straight"></button>
@@ -220,113 +254,176 @@
                         </div>
                     </div>
                     <span class="etc_control">
-                            <img class="repeat" src="/img/repeat_off.png" alt="반복안함">
-                            <img class="suffle" src="/img/suffle_off.png">
-                            <img class="sound" src="/img/sound.png" style="margin-left: 20px;">
-                            <div class="volume-slider-con">
-                                    <div class="volume-slider"></div>
-                                    <button class="volume-slider-circle"></button>
-                            </div>
+                        <img class="repeat" src="/img/repeat_off.png" alt="반복안함">
+                        <img class="suffle" src="/img/suffle_off.png">
+                        <img class="sound" src="/img/sound.png" style="margin-left: 20px;">
+                        <div class="volume-slider-con">
+                            <div class="volume-slider"></div>
+                            <button class="volume-slider-circle"></button>
+                        </div>
                     </span>
+                </div>
+                <div class="progress_base">
+                    <div class="progress-square"></div>
+                    <div class="progress_bar"></div>
+                </div>
+                <div class="time">
+                    <span id="current_time"></span> / 
+                    <span id="duration"></span>
+                </div>
             </div>
-            
-
-            <div class="progress_base">
-                <div class="progress-square"></div>
-                <div class="progress_bar"></div>
+            <div class="playlistBox">
+                <h5>재생 가능 목록</h5>
+                <div class="playlistScroll">
+                    <ul class="playlist"></ul>
+                </div>
             </div>
-
-            <div class="time">
-                <span id="current_time"></span> / 
-                <span id="duration"></span>
-            </div>
-            
-            <div class="playlist">
-                
-            </div>
-
-
         </div>
-        
     </body>
-    <script>
-        
-        $(document).ready(function(){
 
-            var music = [
+    <script>
+        $(document).ready(function(){
+            var songs = [
                 {   
+                    id : 18,
+                    title : '블랙핑크 - ForeverYoung',
+                    oggPath : '/mp3/BLACKPINK-FOREVER_YOUNG.ogg',
+                    mp3Path : '/mp3/BLACKPINK-FOREVER_YOUNG.mp3',
+                    imgPath : '/songimg/s.jpg'
+                },
+                {   
+                    id : 17,
+                    title : '다이나믹 듀오 - 맵고짜고단거 (Feat. 페노메코)',
+                    oggPath : '/mp3/DynamicDuo-SpicyAndSweet.ogg',
+                    mp3Path : '/mp3/DynamicDuo-SpicyAndSweet.mp3',
+                    imgPath : '/songimg/r.jpg'
+                },
+                {   
+                    id : 16,
+                    title : '아이즈원 - FIESTA',
+                    oggPath : '/mp3/IZONE-FIESTA.ogg',
+                    mp3Path : '/mp3/IZONE-FIESTA.mp3',
+                    imgPath : '/songimg/q.jpg'
+                },
+                {   
+                    id : 15,
+                    title : '아이유 - Blueming',
+                    oggPath : '/mp3/IU-Blueming.ogg',
+                    mp3Path : '/mp3/IU-Blueming.mp3',
+                    imgPath : '/songimg/o.jpg'
+                },
+                {   
+                    id : 14,
+                    title : '마마무 - HIP',
+                    oggPath : '/mp3/MAMAMOO-HIP.ogg',
+                    mp3Path : '/mp3/MAMAMOO-HIP.mp3',
+                    imgPath : '/songimg/n.jpg'
+                },
+                {   
+                    id : 13,
+                    title : '브레이브걸스 - Rollin',
+                    oggPath : '/mp3/BraveGirls-Rollin.ogg',
+                    mp3Path : '/mp3/BraveGirls-Rollin.mp3',
+                    imgPath : '/songimg/m.jpg'
+                },
+                {   
+                    id : 12,
+                    title : '기리보이(GIRIBOY) - 아퍼 (Feat. Kid Milli, Lil tachi, 김승민, NO:EL, C JAMM)',
+                    oggPath : '/mp3/Giriboy-Sick.ogg',
+                    mp3Path : '/mp3/Giriboy-Sick.mp3',
+                    imgPath : '/songimg/l.jpg'
+                },
+                {   
+                    id : 11,
                     title : '박혜원 - 시든 꽃에 물을 주듯',
                     oggPath : '/mp3/TheLonelyBloomStandsAlone.ogg',
                     mp3Path : '/mp3/TheLonelyBloomStandsAlone.mp3',
                     imgPath : '/songimg/k.jpg'
                 },
                 {   
+                    id : 10,
                     title : '10cm - 나의 어깨에 기대어요',
                     oggPath : '/mp3/Lean_on_my_shoulder.ogg',
                     mp3Path : '/mp3/Lean_on_my_shoulder.mp3',
                     imgPath : '/songimg/j.jpg'
                 },
                 {   
+                    id : 9,
                     title : 'AOA - 너나 해',
                     oggPath : '/mp3/You_do_it.ogg',
                     mp3Path : '/mp3/You_do_it.mp3',
                     imgPath : '/songimg/g.jpg'
                 },
                 {   
+                    id : 8,
                     title : '볼빨간사춘기(BOL4) - 워커홀릭',
                     oggPath : '/mp3/Walkerholic.ogg',
                     mp3Path : '/mp3/Walkerholic.mp3',
                     imgPath : '/songimg/i.jpg'
                 },
                 {   
+                    id : 7,
                     title : '황인욱 - 포장마차',
                     oggPath : '/mp3/snack_cart.ogg',
                     mp3Path : '/mp3/snack_cart.mp3',
                     imgPath : '/songimg/h.jpg'
                 },
                 {   
+                    id : 6,
                     title : '거미 - 기억해줘요 내 모든 날과 그때를',
                     oggPath : '/mp3/gummy-Remember_Me.ogg',
                     mp3Path : '/mp3/gummy-Remember_Me.mp3',
                     imgPath : '/songimg/a.jpg'
                 },
                 {   
+                    id : 5,
                     title : '헤이즈 (HEIZE) - We don`t talk together(Feat. 기리보이)',
                     oggPath : '/mp3/heize-We_dont_talk_together.ogg',
                     mp3Path : '/mp3/heize-We_dont_talk_together.mp3',
                     imgPath : '/songimg/b.jpg'
                 },
                 {   
+                    id : 4,
                     title : '박재범 - All I Wanna Do (K) (Feat. Hoody, Loco)',
                     oggPath : '/mp3/JayPark_AllIWannaDo.ogg',
                     mp3Path : '/mp3/JayPark_AllIWannaDo.mp3',
                     imgPath : '/songimg/c.jpg'
                 },
                 {   
+                    id : 3,
                     title : '모모랜드 - 뿜뿜',
                     oggPath : '/mp3/MOMOLAND-BBoomBBoom.ogg',
                     mp3Path : '/mp3/MOMOLAND-BBoomBBoom.mp3',
                     imgPath : '/songimg/d.jpg'
                 },
-                {    
+                {   
+                    id : 2, 
                     title : '선미 - 주인공',
                     oggPath : '/mp3/Sunmi_Heroine.ogg',
                     mp3Path : '/mp3/Sunmi_Heroine.mp3',
                     imgPath : '/songimg/e.jpg'
                 },
                 {   
+                    id : 1,
                     title : '환희 (Hwanhee) - 바람이 되어서라도',
                     oggPath : '/mp3/Hwanhee-Eveninthewind.ogg',
                     mp3Path : '/mp3/Hwanhee-Eveninthewind.mp3',
                     imgPath : '/songimg/f.jpg'
+                },
+                {   
+                    id : 0,
+                    title : '노을 - 늦은 밤 너의 집 앞 골목길에서',
+                    oggPath : '/mp3/noeul-GlowInTheAlleysInFrontOfYourHouseLateAtNight.ogg',
+                    mp3Path : '/mp3/noeul-GlowInTheAlleysInFrontOfYourHouseLateAtNight.mp3',
+                    imgPath : '/songimg/p.jpg'
                 }
             ];
 
-            
-            function MusicBoxApp(music){
-                this.music = music;                                                  //곡 데이터
-                this.audio_mp3 = new Audio(this.music[this.currentIdx].mp3Path),     //오디오 객체(.mp3)
-                this.audio_ogg = new Audio(this.music[this.currentIdx].oggPath),     //오디오 객체(.ogg) 
+            function MusicBoxApp(songs){
+                this.songs = songs;                                               //곡 데이터
+                this.song_id = this.suffleIdx(songs.length);                      //곡 랜덤으로 섞음
+                this.audio_mp3 = new Audio(this.songs[this.song_id].mp3Path),     //오디오 객체(.mp3)
+                this.audio_ogg = new Audio(this.songs[this.song_id].oggPath),     //오디오 객체(.ogg) 
                 this.togglePlayEvent();
                 this.preSongPlayEvent();
                 this.nextSongPlayEvent();
@@ -336,8 +433,8 @@
                 this.repeatEvent();
                 this.suffleEvent();
                 this.buttonHover();
-                $('#song_img').attr('src',this.music[this.currentIdx].imgPath);     //이미지 출력
-                $('#song_title').text(this.music[this.currentIdx].title);           //제목 출력
+                $('#song_img').attr('src',this.songs[this.song_id].imgPath);     //이미지 출력
+                $('#song_title').text(this.songs[this.song_id].title);           //제목 출력
 
                 //진행 막대 초기화
                 this.p_bar = this.progressBar;
@@ -350,13 +447,16 @@
                 this.s_bar.circle.style.left = this.s_bar.sInner.offsetWidth - (this.s_bar.circle.offsetWidth/2) +'px';
                 this.s_bar.toggleSoundEvent(this.audio_ogg);
                 this.s_bar.soundBarEvent(this.audio_ogg);
-                
                 this.mouseMoveEvent(this.p_bar, this.s_bar, this.audio_ogg);
                 this.mouseUpEvent(this.p_bar, this.s_bar, this.audio_ogg, this.audio_mp3);
+
+                //재생 목록
+                this.playlist();
+                this.playlistEvent();
             }
 
             MusicBoxApp.prototype = {
-                currentIdx : 0,                                                 //곡 현재 위치 
+                song_id : 0,                                                    //곡 현재 위치 
                 progressBarStop : false,                                        //진행바 정지 체크
                 repeat : 1,                                                     //반복
                 suffle : false,                                                 //셔플
@@ -379,42 +479,26 @@
                 //이전곡 재생
                 preSongPlayEvent : function(){  
                     $('.prePlay > .circle').click(function(){
-                        this.progressBarStop=true;
                         if (this.suffle)     //셔플
-                            this.currentIdx = this.suffleIdx();
+                            this.song_id = this.suffleIdx();
                         else{
-                            if (this.currentIdx == 0) this.currentIdx = this.music.length-1
-                            else this.currentIdx -= 1
+                            if (this.song_id == 0) this.song_id = this.songs.length-1
+                            else this.song_id -= 1
                         }
-                        this.audio_mp3.src=this.music[this.currentIdx].mp3Path;
-                        this.audio_ogg.src=this.music[this.currentIdx].oggPath;
-                        $('.togglePlay button').removeClass('vertical-line').addClass('right_triangle');
-                        $('.togglePlay label').text('재생');
-                        $('#song_img').attr('src',this.music[this.currentIdx].imgPath);
-                        $('#song_title').text(this.music[this.currentIdx].title);
-                        var p_bar = this.p_bar;
-                        p_bar.updateProgressBar(p_bar.p_base.offsetLeft);
+                        this.songChange(this.song_id);
                     }.bind(this));
                 },
 
                 //다음곡 재생
                 nextSongPlayEvent : function(){
                     $('.nextPlay > .circle').click(function(){
-                        this.progressBarStop=true;
                         if (this.suffle)     //셔플
-                            this.currentIdx = this.suffleIdx();
+                            this.song_id = this.suffleIdx();
                         else{
-                            if (this.currentIdx < this.music.length-1) this.currentIdx +=1;
-                            else this.currentIdx = 0;
+                            if (this.song_id < this.songs.length-1) this.song_id +=1;
+                            else this.song_id = 0;
                         }
-                        this.audio_mp3.src = this.music[this.currentIdx].mp3Path;
-                        this.audio_ogg.src = this.music[this.currentIdx].oggPath;
-                        $('.togglePlay button').removeClass('vertical-line').addClass('right_triangle');
-                        $('.togglePlay label').text('재생');
-                        $('#song_img').attr('src',this.music[this.currentIdx].imgPath);
-                        $('#song_title').text(this.music[this.currentIdx].title);
-                        var p_bar = this.p_bar;
-                        this.p_bar.updateProgressBar(this.p_bar.p_base.offsetLeft);
+                        this.songChange(this.song_id);
                     }.bind(this));
                 },
                 
@@ -439,17 +523,14 @@
                 //노래가 끝났을때
                 endedSongEvent : function(){
                     this.audio_ogg.addEventListener('ended',function(){
-                        if (this.repeat==2){ //순환재생
+                        if (this.repeat==2){    //순환재생
                             if (this.suffle)     //셔플재생
-                                this.currentIdx = this.suffleIdx();
+                                this.song_id = this.suffleIdx();
                             else{
-                                if (this.currentIdx < this.music.length-1) this.currentIdx +=1;
-                                else this.currentIdx = 0;
+                                if (this.song_id < this.songs.length-1) this.song_id +=1;
+                                else this.song_id = 0;
                             }
-                            this.audio_mp3.src=this.music[this.currentIdx].mp3Path;
-                            this.audio_ogg.src=this.music[this.currentIdx].oggPath;
-                            $('#song_img').attr('src',this.music[this.currentIdx].imgPath);
-                            $('#song_title').text(this.music[this.currentIdx].title);
+                            songChange(this.song_id);
                             this.audio_ogg.play();
                         }
                         else if(this.repeat==3){//1곡반복재생
@@ -462,6 +543,18 @@
                         $('#current_time').text('0:00');
                         this.p_bar.updateProgressBar(this.p_bar.p_base.offsetLeft);
                     }.bind(this));
+                },
+                //노래 변경
+                songChange : function(song_id){
+                    var p_bar = this.p_bar;
+                    this.p_bar.updateProgressBar(this.p_bar.p_base.offsetLeft);
+                    this.progressBarStop=true;
+                    this.audio_mp3.src = this.songs[song_id].mp3Path;
+                    this.audio_ogg.src = this.songs[song_id].oggPath;
+                    $('.togglePlay button').removeClass('vertical-line').addClass('right_triangle');
+                    $('.togglePlay label').text('재생');
+                    $('#song_img').attr('src',this.songs[song_id].imgPath);
+                    $('#song_title').text(this.songs[song_id].title);
                 },
 
                 //전체 mousemove
@@ -483,7 +576,6 @@
                         soundBar.s_drag = false;
                         if (progressBar.p_mousedown){
                             if (audio_ogg.currentTime==0) {
-                                console.log("로드");
                                 audio_ogg.load();
                             };
                             audio_ogg.currentTime = progressBar.currentPercentage(e.clientX, audio_mp3);
@@ -493,8 +585,7 @@
                             
                         }
                         progressBar.p_drag = false;
-                        progressBar.p_mousedown = false;
-                        
+                        progressBar.p_mousedown = false;           
                     });
                 },
                 
@@ -533,7 +624,6 @@
                 
                 //진행막대
                 progressBar : {
-                
                     p_base : document.querySelector('.progress_base'),
                     pInner : document.querySelector('.progress_bar'),
                     square : document.querySelector('.progress-square'),
@@ -596,8 +686,6 @@
                         }
                         return percentage * audio_mp3.duration;
                     },
-                    
-
                 },
 
                 //사운드 막대
@@ -623,7 +711,7 @@
                         }
                         //원
                         if(position<0){
-                            position=0
+                            position=0;
                         }
                         if(position>this.sound.clientWidth){
                             position = this.sound.clientWidth;
@@ -671,11 +759,11 @@
 
                 //셔플된 인덱스
                 suffleIdx : function(){
-                    if (this.music.length==0) return this.currentIdx;
+                    if (this.songs.length==0) return this.song_id;
                     var idx;
                     while(true){
-                        idx = Math.floor(Math.random()*this.music.length);
-                        if(idx!=this.currentIdx)
+                        idx = Math.floor(Math.random()*this.songs.length);
+                        if(idx!=this.song_id)
                             return idx; 
                     }   
                 },
@@ -713,13 +801,24 @@
                         circleNode.style.borderColor="gray";
                         
                     });
+                },
+                playlist : function(){
+                    for(var i=0; i<this.songs.length; i++){
+                        var songTitle = this.songs[i].title;
+                        var substrTitle = songTitle.length > 50 ? songTitle.substring(0,50)+"..." : songTitle;
+                        var song_id = i;
+                        $('.playlist').append(`<li class="playlistRow" id="${song_id}">${substrTitle}</li>`);
+                    }
+                },
+                playlistEvent : function(){
+                    $('.playlist > li').on("click", function(e){
+                        var song_id = Number(e.target.id);
+                        this.songChange(song_id);
+                       
+                    }.bind(this));
                 }
-        
-                
-
             }
-
-            new MusicBoxApp(music);   //뮤직 생성
+            new MusicBoxApp(songs);   //뮤직 생성
             
   
             //진행 막대 현재위치에서 재생시간 변경 구현중 에러
