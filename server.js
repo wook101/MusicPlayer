@@ -3,7 +3,7 @@ var fs = require('fs');
 var app = http.createServer(function(request,response){
     var url = request.url;
     if(url == '/'){
-      url = '/index.html';
+      url = '/main.html';
     }
     if(url == '/favicon.ico'){
       return response.writeHead(404);
@@ -17,3 +17,4 @@ var app = http.createServer(function(request,response){
  
 });
 app.listen(3000);
+console.log('Server running  at http://localhost:3000/');
