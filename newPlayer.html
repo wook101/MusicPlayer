@@ -670,6 +670,7 @@
                     var percentage;
                     var position = x - this.sOuter.offsetLeft;
                     percentage = 100 * position / this.sOuter.clientWidth;
+                    console.log(percentage);
                     //막대
                     if (percentage > 100) {
                         percentage = 100;
@@ -684,6 +685,18 @@
                     if (position > this.sOuter.clientWidth) {
                         position = this.sOuter.clientWidth;
                     }
+
+
+                    //사운드바 움직일 때 사운드 이미지 처리
+                    if(percentage <= 0 && this.mute == false){
+                        this.mute = true;
+                        $('.sound').attr('src','/img/mute.png');
+                    }
+                    if(percentage > 0 && this.mute == true){
+                        this.mute = false;
+                        $('.sound').attr('src','/img/sound.png');
+                    }
+                    
 
                     this.sInner.style.width = percentage + '%';
                     this.circle.style.left = position - (this.circle.offsetWidth / 2) + 'px';
