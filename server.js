@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var port = process.env.PORT || 3000;
 var app = http.createServer(function(request,response){
     var url = request.url;
     if(url == '/'){
@@ -17,5 +18,5 @@ var app = http.createServer(function(request,response){
     
  
 });
-app.listen(3000);
-console.log('Server running  at http://localhost:3000/');
+app.listen(port);
+console.log(`Server running  at http://localhost:${port}/`)

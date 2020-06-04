@@ -1,0 +1,20 @@
+{
+  "name": "playmusicbox",
+  "version": "1.0.0",
+  "description": "musicplayer",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wook101/MusicPlayer.git"
+  },
+  "author": "wook101",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wook101/MusicPlayer/issues"
+  },
+  "homepage": "https://github.com/wook101/MusicPlayer#readme"
+}
