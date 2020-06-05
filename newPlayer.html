@@ -325,7 +325,8 @@
             this.playlist = JSON.parse(localStorage.getItem('playlist'));  
             this.play_id = this.playlist.length-1;                                   //재생곡 id
             for(var id = 0; id < this.playlist.length; id++){                        //재생 목록에 곡들 추가
-                $('.playlist').append(`<li class="playlistRow" id="${id}">${this.songs[this.playlist[id]].title}</li>`);
+                var playlistRow = "<li class='playlistRow' id="+id+">"+this.songs[this.playlist[id]].title+"</li>"
+                $('.playlist').append(playlistRow);
                 this.playlistEvent();
             }
             this.playlistTitleColorChange(this.play_id);
@@ -507,12 +508,12 @@
 
             //재생목록 색깔변경
             playlistTitleColorChange: function (playIdx) {
-                $(`.playlist > #${playIdx}`).css('color', 'blueviolet');
+                $(".playlist > #" + playIdx).css('color', 'blueviolet');
             },
 
             //재생목록 색깔초기화
             playlistTitleColorDefault: function (playIdx) {
-                $(`.playlist > #${playIdx}`).css('color', '');
+                $(".playlist > #" + playIdx).css('color', '');
             },
 
             //재생버튼 삼각형 이미지로 변경
