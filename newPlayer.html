@@ -329,8 +329,7 @@
                 this.playlistEvent();
             }
             this.playlistTitleColorChange(this.play_id);
-            
-            $('.playlistScroll').scrollTop($('.playlistScroll')[0].scrollHeight);
+            $('.playlistScroll').scrollTop($('.playlistScroll')[0].scrollHeight);   //재생목록 스크롤 마지막으로 지정
 
             //노래 로드
             this.song_id = this.playlist[this.play_id];                         //실제곡 id
@@ -428,12 +427,14 @@
             },
 
             //노래가 로드될 떄
+            //ogg로드
             loadedOggEvent: function () {
                 this.audio_ogg.addEventListener('loadeddata', function () {
                     var currentTime = this.convertTime(this.audio_ogg.currentTime);
                     $('#current_time').text(currentTime);
                 }.bind(this));
             },
+            //mp3로드
             loadedMp3Event: function(){
                 this.audio_mp3.addEventListener('loadeddata',function(){
                     var duration = this.convertTime(this.audio_mp3.duration);
@@ -669,7 +670,6 @@
                     var percentage;
                     var position = x - this.sOuter.offsetLeft;
                     percentage = 100 * position / this.sOuter.clientWidth;
-                    console.log(percentage);
                     //막대
                     if (percentage > 100) {
                         percentage = 100;
@@ -813,6 +813,10 @@
             //재생 > 이전,다음 > 재생 버튼을 반복해서 빠르게 눌렀을때 ogg오디오파일이 로드가 지연되는 오류가 발생하여
             로드 되지않은채 재생 버튼을 누를 경우 오류가 발생한다.
             해결방안 : 재생버튼을 눌렀을때 다음, 이전의 재생곡을 미리 로드하여 대기열을 구성한다.
+
+            3.로딩 처리해야함(2020/06/05)
+
+
 
         */
 
