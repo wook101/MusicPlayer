@@ -221,7 +221,8 @@
                 for (var song_id = 0; song_id < this.songs.length; song_id++) {
                     var songTitle = this.songs[song_id].title;
                     var substrTitle = songTitle.length > 50 ? songTitle.substring(0, 50) + "..." : songTitle;
-                    $('.musicChart').append(`<li class="musicChartRow" id="${song_id}">${substrTitle}</li>`);
+                    var musicChartRow = "<li class='musicChartRow' id=" + song_id + ">"+substrTitle+"</li>";
+                    $('.musicChart').append(musicChartRow);
                 }
             },
             //뮤직 플레이어에 노래추가
