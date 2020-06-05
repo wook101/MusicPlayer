@@ -20,7 +20,7 @@
             width: 100%;
         }
 
-        header h3 {
+        header h4 {
             font-family: TimonMonsori-ttf;
             color: blueviolet;
             margin: 0;
@@ -28,8 +28,8 @@
         }
 
         .musicBox {
-            width: 430px;
-            border: solid 1px #d8d8d8;
+            width: 380px;
+            border: solid 0.8px #d8d8d8;
             margin: 0 0 0 10px;
         }
 
@@ -39,7 +39,7 @@
         }
 
         .play_control {
-            margin: 10px 10px 10px 0;
+            margin: 8px 0px 5px 0;
         }
 
         .prePlay,
@@ -50,59 +50,52 @@
 
         .left_triangle {
             position: absolute;
-            width: 10px;
-            height: 10px;
             border-color: #fff gray #fff #fff;
-            border-width: 6px 11px 6px 0px;
+            border-width: 5px 10px 5px 0px;
             border-style: solid;
             padding: 0;
-            margin: 8px 0 0 9px;
+            margin: 6px 0 0 6px;
         }
 
         .right_triangle {
             position: absolute;
-            width: 10px;
-            height: 10px;
             border-color: #fff #fff #fff gray;
-            border-width: 6px 0px 6px 11px;
+            border-width: 5px 0px 5px 10px;
             border-style: solid;
             padding: 0;
-            margin: 8px 0 0 10px;
+            margin: 6px 0 0 8px;
         }
 
         .left_straight {
             position: absolute;
             z-index: 5;
-            width: 2px;
-            height: 10px;
+            height: 9px;
             border-color: gray;
-            border-width: 0px 2px 0px 0px;
+            border-width: 0px 1px 0px 0px;
             border-style: solid;
-            margin: 9px 0 0 9px;
+            margin: 7px 0 0 6px;
             padding: 0;
         }
 
         .right_straight {
             position: absolute;
             z-index: 5;
-            width: 2px;
-            height: 10px;
+            height: 9px;
             border-color: gray;
-            border-width: 0px 2px 0px 0px;
+            border-width: 0px 1.5px 0px 0px;
             border-style: solid;
-            margin: 9px 0 0 20px;
+            margin: 7px 0 0 17px;
             padding: 0;
         }
 
         .vertical-line {
             position: absolute;
-            width: 10px;
-            height: 12px;
+            height: 10px;
             border-color: #fff #fff #fff gray;
-            border-width: 0px 0px 0px 10px;
+            border-width: 0px 0px 0px 8px;
             border-style: double;
             background: #fff;
-            margin: 8px 0 0 9px;
+            margin: 6px 0 0 7.5px;
             padding: 0;
         }
 
@@ -110,16 +103,16 @@
             position: relative;
             display: inline-block;
             z-index: 10;
-            width: 25px;
-            height: 25px;
+            width: 20px;
+            height: 20px;
             border: solid 1pt gray;
-            border-radius: 25px;
+            border-radius: 20px;
             cursor: pointer;
         }
 
         .time {
             margin: 0 7px 0 0;
-            font-size: 13px;
+            font-size: 12px;
             font-family: "고딕";
             font-weight: bold;
             text-align: right;
@@ -131,17 +124,18 @@
 
         .playlistBox {
             padding: 0 0 10px 0;
-            border-top: solid 1px #bdbcbc;
+            border-top: solid 0.8px #bdbcbc;
         }
 
-        .playlistBox>h5 {
-            padding: 10px;
+        .playlistBox > h5 {
+            padding: 8px;
+            font-size: 12px;
             margin: 0;
         }
 
         .playlistScroll {
-            border-top: solid 1px #bdbcbc;
-            height: 300px;
+            border-top: solid 0.8px #bdbcbc;
+            height: 250px;
             overflow: auto;
         }
 
@@ -167,9 +161,9 @@
 
         .playlistRow {
             list-style: none;
-            font-size: 13px;
+            font-size: 10px;
             font-family: 나눔바른고딕;
-            padding: 10px;
+            padding: 9px;
         }
 
         .playlistRow:hover {
@@ -178,55 +172,54 @@
         }
 
         .etc_control img {
-            width: 25px;
-            height: 20px;
+            width: 23px;
+            height: 18px;
             cursor: pointer;
         }
 
         #song_title {
             margin: 0 0 10px 0px;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: bold;
             font-family: "나눔고딕";
         }
 
         #song_img {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
         }
 
         .right_area {
             display: inline-block;
-            width: 53%;
+            width: 65%;
             padding: 0 0 0 15px;
         }
 
         .volume-sOuter {
             display: inline-block;
             position: relative;
-            height: 7px;
+            height: 6px;
             width: 100px;
             background-color: #ddd;
             margin: 0 0 5px 5px;
-            border-radius: 20px;
+            border-radius: 15px;
         }
 
         .volume-sInner {
             position: relative;
-            width: auto;
             height: 100%;
             background-color: #d14cff;
-            border-radius: 20px;
+            border-radius: 15px;
         }
 
         .volume-circle {
             position: absolute;
-            top: -4px;
-            width: 15px;
-            height: 15px;
+            top: -3px;
+            width: 13px;
+            height: 13px;
             background-color: #fff;
-            border: solid gray 1px;
-            border-radius: 8px;
+            border: solid gray 0.8px;
+            border-radius: 13px;
             cursor: pointer;
             outline: none;
         }
@@ -234,9 +227,9 @@
         .progress_base {
             display: inline-block;
             position: relative;
-            width: 410px;
-            height: 15px;
-            margin: 20px 0 0 0;
+            width: 360px;
+            height: 12px;
+            margin: 15px 0 0 0;
             background-color: black;
         }
 
@@ -266,7 +259,7 @@
 
 <body oncontextmenu='return false' onselectstart='return false'>
     <header>
-        <h3>MusicBox</h3>
+        <h4>MusicBox</h4>
     </header>
     <div class="musicBox">
         <div class="playerBox">
@@ -330,16 +323,17 @@
             
             //재생목록 로드
             this.playlist = JSON.parse(localStorage.getItem('playlist'));  
-            this.play_id = 0;                                                        //재생곡 id
+            this.play_id = this.playlist.length-1;                                   //재생곡 id
             for(var id = 0; id < this.playlist.length; id++){                        //재생 목록에 곡들 추가
                 $('.playlist').append(`<li class="playlistRow" id="${id}">${this.songs[this.playlist[id]].title}</li>`);
                 this.playlistEvent();
             }
             this.playlistTitleColorChange(this.play_id);
             
-            
+            $('.playlistScroll').scrollTop($('.playlistScroll')[0].scrollHeight);
+
             //노래 로드
-            this.song_id = this.playlist[0];                                     //실제곡 id
+            this.song_id = this.playlist[this.play_id];                         //실제곡 id
             this.audio_mp3 = new Audio(this.songs[this.song_id].mp3Path),       //오디오 객체(.mp3)
             this.audio_ogg = new Audio(this.songs[this.song_id].oggPath),       //오디오 객체(.ogg) 
             $('#song_img').attr('src', this.songs[this.song_id].imgPath);        //이미지 출력
@@ -349,7 +343,8 @@
             this.togglePlayEvent();
             this.preSongChangeEvent();
             this.nextSongChangeEvent();
-            this.loadedSongEvent();
+            this.loadedOggEvent();
+            this.loadedMp3Event();
             this.timeUpdateSongEvent();
             this.endedSongEvent();
             this.repeatEvent();
@@ -433,11 +428,15 @@
             },
 
             //노래가 로드될 떄
-            loadedSongEvent: function () {
+            loadedOggEvent: function () {
                 this.audio_ogg.addEventListener('loadeddata', function () {
                     var currentTime = this.convertTime(this.audio_ogg.currentTime);
-                    var duration = this.convertTime(this.audio_mp3.duration);
                     $('#current_time').text(currentTime);
+                }.bind(this));
+            },
+            loadedMp3Event: function(){
+                this.audio_mp3.addEventListener('loadeddata',function(){
+                    var duration = this.convertTime(this.audio_mp3.duration);
                     $('#duration').text(duration);
                 }.bind(this));
             },
