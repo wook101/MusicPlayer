@@ -334,10 +334,11 @@
 
             //노래 로드
             this.song_id = this.playlist[this.play_id];                         //실제곡 id
-            this.audio_mp3 = new Audio(this.songs[this.song_id].mp3Path),       //오디오 객체(.mp3)
-            this.audio_ogg = new Audio(this.songs[this.song_id].oggPath),       //오디오 객체(.ogg) 
+            this.audio_mp3 = new Audio(this.songs[this.song_id].mp3Path);       //오디오 객체(.mp3)
+            this.audio_ogg = new Audio(this.songs[this.song_id].oggPath);       //오디오 객체(.ogg) 
             $('#song_img').attr('src', this.songs[this.song_id].imgPath);        //이미지 출력
             $('#song_title').text(this.songs[this.song_id].title);              //제목 출력
+
 
 
             this.togglePlayEvent();
@@ -806,17 +807,15 @@
             1. 진행 막대 현재위치에서 재생시간 변경 오류
             크롬에서 mp3파일 currentTime값을 변경할려는 경우 0으로 초기화됨  duration값은 잘 얻어옴
             크롬에서 ogg파일 currentTime값을 변경은 문제없지만 duration값을 얻어오지못함..(infinity-NaN)
-            크롬에서 ogg파일의 duration값을 받아오지못함..
-            IE에서는 currentTime값 변경해도 문제없지만 ogg파일의 duration값을 받아오지못함..
-            IE에서는 ogg파일의 duration값을 받아오지 못하지만 신기하게 동작는 됨
+            크롬에서 ogg파일의 duration값을 못얻음.. mp3파일은 얻을수 있음
+            IE에서는 mp3의 currentTime값 변경해도 문제없지만 ogg파일 및 duration 지원안함..
 
             2. 오디오 파일 로드 지연오류
             //재생 > 이전,다음 > 재생 버튼을 반복해서 빠르게 눌렀을때 ogg오디오파일이 로드가 지연되는 오류가 발생하여
             로드 되지않은채 재생 버튼을 누를 경우 오류가 발생한다.
             해결방안 : 재생버튼을 눌렀을때 다음, 이전의 재생곡을 미리 로드하여 대기열을 구성한다.
 
-            3.로딩 처리해야함(2020/06/05)
-
+            3.로딩 처리해야함
 
 
         */
