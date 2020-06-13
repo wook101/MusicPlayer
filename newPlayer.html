@@ -317,6 +317,15 @@
 <script>
     $(document).ready(function () {
 
+        //이미지 미리 불러오기
+        function imagePreLoading(imagelist){
+            for (var i=0; i<imagelist.length; i++){
+                var img = new Image();
+                img.src = imagelist[i];
+            }
+        }
+
+        //뮤직 플레이어 
         function newPlayer() {
             this.songs = JSON.parse(localStorage.getItem('songs'));                 //모든 곡 데이터                                                     //곡 데이터
             //this.song_id = this.suffleIdx(songs.length);                          //곡 랜덤으로 섞음
@@ -800,7 +809,7 @@
 
 
         }
-        new newPlayer();   //뮤직 플레이어 생성
+
 
 
         /*  
@@ -819,6 +828,22 @@
 
 
         */
+
+        //이미지 미리 불러오기
+        imagePreLoading([
+            '/img/repeat_on.png',
+            '/img/repeat_one.png',
+            '/img/repeat_off.png',
+            '/img/suffle_on.png',
+            '/img/suffle_off.png',
+            '/img/mute.png',
+            '/img/sound.png',
+        ]);
+        new newPlayer();   //뮤직 플레이어 생성
+
+
+
+
 
     });
 
