@@ -123,7 +123,7 @@
         }
 
         .playlistBox {
-            padding: 0 0 10px 0;
+            padding: 0;
             border-top: solid 0.8px #bdbcbc;
         }
 
@@ -159,18 +159,46 @@
             padding: 0;
         }
 
-        .playlistRow {
-            list-style: none;
-            font-size: 10px;
-            font-family: 나눔바른고딕;
-            padding: 9px;
+        .playlistRowArea{
+            height: 25px;
+            padding: 5px;
         }
-
-        .playlistRow:hover {
+        .playlistRowArea:hover{
             cursor: pointer;
             background-color: #ecedf7;
         }
+        .playlistRow {
+            display: inline-block;
+            width:90%;
+            line-height: 25px;
+            font-size: 10px;
+            font-family: 나눔바른고딕;
+        }
 
+        .click_checkbox{
+            display: inline-block;
+        }
+        .checkbox{
+            margin: 0 5px 0 0;
+            width: 10px;
+            height: 10px;
+        }
+        
+        #controlArea{
+            padding: 1px;
+            background-color: #f7f7f7;
+        }
+        #deleteBtn{
+            font-size: 1px;
+            background-color: #fff;
+            border: 1px #696969 solid;
+            font-weight: bold;
+            font-family: "나눔바른고딕";
+            cursor: pointer;
+        }
+        #deleteBtn:hover{
+            background-color: #f5f5ffed;
+        }
         .etc_control img {
             width: 23px;
             height: 18px;
@@ -307,10 +335,12 @@
         <div class="playlistBox">
             <h5>재생 목록</h5>
             <div class="playlistScroll">
-                <ul class="playlist"></ul>
+                <div class="playlist"></div>
+            </div>
+            <div id="controlArea">
+                <input id="deleteBtn" type="button" value="삭제">
             </div>
         </div>
-    </div>
 
 </body>
 
@@ -318,7 +348,7 @@
     $(document).ready(function () {
 
         //이미지 미리 불러오기
-        function imagePreLoading(imagelist){
+        function preloadImages(imagelist){
             for (var i=0; i<imagelist.length; i++){
                 var img = new Image();
                 img.src = imagelist[i];
@@ -334,13 +364,17 @@
             this.playlist = JSON.parse(localStorage.getItem('playlist'));  
             this.play_id = this.playlist.length-1;                                   //재생곡 id
             for(var id = 0; id < this.playlist.length; id++){                        //재생 목록에 곡들 추가
-                var playlistRow = "<li class='playlistRow' id="+id+">"+this.songs[this.playlist[id]].title+"</li>"
+                var playlistRow = "<div class='playlistRowArea'>"
+                +"<div class='click_checkbox'><input class='checkbox' type='checkbox'></div>"
+                +"<div class='playlistRow' id="+id+">"
+                +this.songs[this.playlist[id]].title+"</div>" +"</div>"
                 $('.playlist').append(playlistRow);
-                this.playlistEvent();
+                this.playlistChangeEvent();
             }
             this.playlistTitleColorChange(this.play_id);
+            this.playlistDeleteBtn();                                               //재생목록 삭제버튼
             $('.playlistScroll').scrollTop($('.playlistScroll')[0].scrollHeight);   //재생목록 스크롤 마지막으로 지정
-
+            
             //노래 로드
             this.song_id = this.playlist[this.play_id];                         //실제곡 id
             this.audio_mp3 = new Audio(this.songs[this.song_id].mp3Path);       //오디오 객체(.mp3)
@@ -518,12 +552,12 @@
 
             //재생목록 색깔변경
             playlistTitleColorChange: function (playIdx) {
-                $(".playlist > #" + playIdx).css('color', 'blueviolet');
+                $(".playlistRowArea > #" + playIdx).css('color', 'blueviolet');
             },
 
             //재생목록 색깔초기화
             playlistTitleColorDefault: function (playIdx) {
-                $(".playlist > #" + playIdx).css('color', '');
+                $(".playlistRowArea > #" + playIdx).css('color', '');
             },
 
             //재생버튼 삼각형 이미지로 변경
@@ -794,9 +828,9 @@
                 });
             },
 
-            //재생목록이벤트
-            playlistEvent: function () {
-                $('.playlist > li').on("click", function (e) {
+            //재생곡 변경 이벤트
+            playlistChangeEvent: function () {
+                $('.playlistRow').on("click", function (e) {
                     var prePlayIdx = this.play_id;
                     var newPlayIdx = Number(e.target.id);
                     var song_id = this.playlist[newPlayIdx];
@@ -805,7 +839,26 @@
                     this.playlistTitleColorChange(newPlayIdx);
                     this.play_id = newPlayIdx;
                 }.bind(this));
+            },
+            //재생목록 삭제 버튼 
+            playlistDeleteBtn: function(){
+                $('#deleteBtn').on("click", function(){
+                    var songsCnt = $('.checkbox').length; 
+                    var point = 0                       //현재 기준점 인덱스 
+                    var cnt = 0
+                    while(cnt<songsCnt){                //재생목록에서 선택된 노래 모두 제거  
+                        if ($('.checkbox')[point].checked){
+                            $('.playlistRowArea')[point].remove();  //요소제거
+                            this.playlist.splice(point,1);          //localStorage.playlist에서 노래 제거
+                            localStorage.setItem('playlist', JSON.stringify(this.playlist)); //수정된 plsylist 적용
+                        }else{
+                            point++;
+                        }
+                        cnt++
+                    }
+                }.bind(this));
             }
+            
 
 
         }
@@ -830,7 +883,7 @@
         */
 
         //이미지 미리 불러오기
-        imagePreLoading([
+        preloadImages([
             '/img/repeat_on.png',
             '/img/repeat_one.png',
             '/img/repeat_off.png',

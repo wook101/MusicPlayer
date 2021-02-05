@@ -245,7 +245,7 @@
             //팝업창 열기
             openPopUp : function (pop) {
                 if (pop == undefined) {
-                    pop = window.open('newPlayer', '', 'width=410,height=500');
+                    pop = window.open('newPlayer', '', 'width=410,height=530');
                     if (JSON.parse(localStorage.getItem('songs'))==null){
                         localStorage.setItem('songs', JSON.stringify(this.songs));   //모든 곡 데이터 로컬스토리지에 저장
                     }
