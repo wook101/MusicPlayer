@@ -856,6 +856,16 @@
                         }
                         cnt++
                     }
+                    //재생목록 모두 삭제 후 로드
+                    $('.playlist').children().remove();
+                    for(var id = 0; id < this.playlist.length; id++){                        //재생 목록에 곡들 추가
+                        var playlistRow = "<div class='playlistRowArea'>"
+                        +"<div class='click_checkbox'><input class='checkbox' type='checkbox'></div>"
+                        +"<div class='playlistRow' id="+id+">"
+                        +this.songs[this.playlist[id]].title+"</div>" +"</div>"
+                        $('.playlist').append(playlistRow);
+                        this.playlistChangeEvent();
+                    }
                 }.bind(this));
             }
             
