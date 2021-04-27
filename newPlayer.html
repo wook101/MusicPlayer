@@ -364,11 +364,13 @@
             //재생목록 로드
             this.playlist = JSON.parse(localStorage.getItem('playlist'));  
             this.play_id = this.playlist.length-1;                                   //재생곡 id
-            for(var id = 0; id < this.playlist.length; id++){                        //재생 목록에 곡들 추가
+            for(var id = 0; id < this.playlist.length; id++){
+                var playIdx = this.playlist[id];
+                var songTitle = this.songs[playIdx].title;
+                var substrTitle = songTitle.length > 50 ? songTitle.substring(0, 50) + "..." : songTitle;                        //재생 목록에 곡들 추가
                 var playlistRow = "<div class='playlistRowArea'>"
                 +"<div class='click_checkbox'><input class='checkbox' type='checkbox'></div>"
-                +"<div class='playlistRow' id="+id+">"
-                +this.songs[this.playlist[id]].title+"</div>" +"</div>"
+                +"<div class='playlistRow' id="+id+">"+substrTitle+"</div>" +"</div>"
                 $('.playlist').append(playlistRow);
                 this.playlistChangeEvent();
             }
@@ -379,7 +381,11 @@
             //노래 로드
             this.song_id = this.playlist[this.play_id];                         //실제곡 id
             this.audio_mp3 = new Audio(this.songs[this.song_id].mp3Path);       //오디오 객체(.mp3)
-            this.audio_ogg = new Audio(this.songs[this.song_id].oggPath);       //오디오 객체(.ogg) 
+            this.audio_ogg = new Audio(this.songs[this.song_id].oggPath);       //오디오 객체(.ogg)
+            
+            this.audio_mp3.preload="metadata";
+            //console.log(this.audio_mp3)
+            //console.log(this.audio_mp3.duration) 
             $('#song_img').attr('src', this.songs[this.song_id].imgPath);        //이미지 출력
             $('#song_title').text(this.songs[this.song_id].title);              //제목 출력
 
@@ -413,6 +419,11 @@
             this.mouseMoveEvent(this.p_bar, this.s_bar, this.audio_ogg);
             this.mouseUpEvent(this.p_bar, this.s_bar, this.audio_ogg, this.audio_mp3);
 
+            //재생 목록
+            //this.playlistArea();
+            this.playListCheckBoxEvent(this.checkedSongs);
+            
+
         }
 
         newPlayer.prototype = {
@@ -420,6 +431,7 @@
             progressBarStop: false,                                        //진행바 정지 체크
             repeat: 1,                                                     //반복
             suffle: false,                                                 //셔플
+            checkedSongs: new Set(),                                                  //재생목록에서 체크표시된 곡들
             //곡 재생,정지
             togglePlayEvent: function () {
                 $('.togglePlay > .circle').click(function () {
@@ -828,7 +840,8 @@
 
                 });
             },
-
+            
+            
             //재생곡 변경 이벤트
             playlistChangeEvent: function () {
                 $('.playlistRow').on("click", function (e) {
@@ -844,19 +857,48 @@
             //재생목록 삭제 버튼 
             playlistDeleteBtn: function(){
                 $('#deleteBtn').on("click", function(){
+                    var playlist = this.playlist;   //재생목록
+                    var checkedSongs = this.checkedSongs; //제거할 곡들이 담겨있는 목록
+
+                    if (checkedSongs.size!=0){
+                        checkedSongs = Array.from(checkedSongs).reverse() //set to array and reverse sort
+                        console.log(checkedSongs);
+                        console.log("제거 전 재생목록",playlist);
+                        for(var idx of checkedSongs){                    //역순으로 해당 곡들 제거
+                            playlist.splice(idx,1); 
+                            $('.playlistRowArea')[idx].remove();        //요소제거
+                        }
+
+                        console.log("체크하지 않는 곡들",checkedSongs);    
+                        console.log("제거 후 재생목록",playlist);
+                        
+                        localStorage.setItem('playlist', JSON.stringify(playlist)); //제거된 plsylist 적용
+                    } 
+                   
+
+
+                    /*
                     var songsCnt = $('.checkbox').length; 
                     var point = 0                       //현재 기준점 인덱스 
                     var cnt = 0
+                    var checkedList = []
+                    console.log(this.playlist)
+                    console.log($('.checkbox').checked)
+                
                     while(cnt<songsCnt){                //재생목록에서 선택된 노래 모두 제거  
                         if ($('.checkbox')[point].checked){
-                            $('.playlistRowArea')[point].remove();  //요소제거
+                            //$('.playlistRowArea')[point].remove();  //요소제거
+                            //var playlist = document.querySelectorAll(".playlist");
+                            console.log(playlist);
                             this.playlist.splice(point,1);          //localStorage.playlist에서 노래 제거
                             localStorage.setItem('playlist', JSON.stringify(this.playlist)); //수정된 plsylist 적용
                         }else{
                             point++;
                         }
                         cnt++
+                        
                     }
+         
                     //재생목록 모두 삭제 후 로드
                     $('.playlist').children().remove();
                     for(var id = 0; id < this.playlist.length; id++){                        //재생 목록에 곡들 추가
@@ -867,11 +909,35 @@
                         $('.playlist').append(playlistRow);
                         this.playlistChangeEvent();
                     }
+                    */
                 }.bind(this));
+            
+            
+            },
+            //재생목록 체크박스 이벤트
+            playListCheckBoxEvent: function(checkedSongs){
+                var checkboxlength = $('.checkbox').length;
+                for (i=0;i<checkboxlength;i++){
+                    (function(m){   //클로저
+                        $('.checkbox')[m].addEventListener("click",function(e){ //체크하지 않는 곡들 추가
+                            if (e.target.checked)
+                                checkedSongs.add(m);    
+                            
+                            else{
+                                checkedSongs.delete(m);    
+                            }
+                            console.log(checkedSongs);
+                        }.bind(this));
+                    })(i);
+                }
+                
             }
+
             
 
-
+            
+            
+            
         }
 
 
@@ -904,9 +970,6 @@
             '/img/sound.png',
         ]);
         new newPlayer();   //뮤직 플레이어 생성
-
-
-
 
 
     });
