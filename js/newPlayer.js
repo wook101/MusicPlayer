@@ -514,15 +514,15 @@ $(document).ready(function () {
                                     .getAttribute("id");
                         checkedSongs.push(Number(checkedIdx));
                         checkedElements[i].removeEventListener()
-                        //checkedElements[i].parentElement.parentElement.remove();    //태그 요소 제거
+                        checkedElements[i].parentElement.parentElement.remove();    //태그 요소 제거
                     }
-                    /*
+                    
                     //재생목록에서 역순으로 제거후 localstorage에 저장
                     checkedSongs = checkedSongs.reverse();
                     for(let idx of checkedSongs)                               //역순으로 해당 곡들 제거 
                         this.playlist.splice(idx,1);                           //태그요소제거
                     localStorage.setItem('playlist', JSON.stringify(this.playlist)); //plsylist도 요소 제거 
-                    */
+                    
                 }
 
             }.bind(this));
