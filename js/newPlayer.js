@@ -211,12 +211,12 @@ $(document).ready(function () {
 
         //재생목록 색깔변경
         playlistTitleColorChange: function (playIdx) {
-            $(".playlistRowArea > #" + playIdx).css('color', 'blueviolet');
+            document.querySelectorAll('.playlistRowArea')[playIdx].style.color='blueviolet';
         },
 
         //재생목록 색깔초기화
         playlistTitleColorDefault: function (playIdx) {
-            $(".playlistRowArea > #" + playIdx).css('color', '');
+            document.querySelectorAll('.playlistRowArea')[playIdx].style.color="";
         },
 
         //재생버튼 삼각형 이미지로 변경
@@ -490,11 +490,21 @@ $(document).ready(function () {
         
         //재생곡 변경 이벤트
         playlistChangeEvent: function (id) {
-            $('.playlistRow#'+id).on("click", function (e) {
+            $('.playlistRow').get(id).addEventListener("click", function (e) {
+                var playlistRows = document.querySelectorAll('.playlistRow');
+                var index;
+                for(var i=0;i<playlistRows.length;i++){
+                    if (playlistRows[i]===e.target){
+                        index = i;
+                    }
+                }
+                
                 var prePlayIdx = this.play_id;
-                var newPlayIdx = Number(e.target.id);
+                var newPlayIdx = index;
                 var song_id = this.playlist[newPlayIdx];
-                this.playlistTitleColorDefault(prePlayIdx);
+              
+                if (prePlayIdx < playlistRows.length)
+                    this.playlistTitleColorDefault(prePlayIdx);
                 this.songChange(song_id);
                 this.playlistTitleColorChange(newPlayIdx);
                 this.play_id = newPlayIdx;
@@ -513,14 +523,15 @@ $(document).ready(function () {
                                     .nextSibling
                                     .getAttribute("id");
                         checkedSongs.push(Number(checkedIdx));
-                        checkedElements[i].removeEventListener()
                         checkedElements[i].parentElement.parentElement.remove();    //태그 요소 제거
                     }
+
                     
                     //재생목록에서 역순으로 제거후 localstorage에 저장
                     checkedSongs = checkedSongs.reverse();
                     for(let idx of checkedSongs)                               //역순으로 해당 곡들 제거 
                         this.playlist.splice(idx,1);                           //태그요소제거
+                    
                     localStorage.setItem('playlist', JSON.stringify(this.playlist)); //plsylist도 요소 제거 
                     
                 }
