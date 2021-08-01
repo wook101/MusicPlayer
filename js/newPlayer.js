@@ -24,7 +24,7 @@ $(document).ready(function () {
             +"<div class='click_checkbox'><input class='checkbox' type='checkbox'></div>"
             +"<div class='playlistRow' id="+id+">"+substrTitle+"</div>" +"</div>"
             $('.playlist').append(playlistRow);
-            this.playlistChangeEvent();
+            this.playlistChangeEvent(id);   //재생목록에서 재생곡 이벤트 주기
         }
         this.playlistTitleColorChange(this.play_id);
         this.playlistDeleteBtn();                                               //재생목록 삭제버튼
@@ -489,8 +489,8 @@ $(document).ready(function () {
         
         
         //재생곡 변경 이벤트
-        playlistChangeEvent: function () {
-            $('.playlistRow').on("click", function (e) {
+        playlistChangeEvent: function (id) {
+            $('.playlistRow#'+id).on("click", function (e) {
                 var prePlayIdx = this.play_id;
                 var newPlayIdx = Number(e.target.id);
                 var song_id = this.playlist[newPlayIdx];
@@ -513,15 +513,16 @@ $(document).ready(function () {
                                     .nextSibling
                                     .getAttribute("id");
                         checkedSongs.push(Number(checkedIdx));
-                        checkedElements[i].parentElement.parentElement.remove();    //태그 요소 제거
+                        checkedElements[i].removeEventListener()
+                        //checkedElements[i].parentElement.parentElement.remove();    //태그 요소 제거
                     }
-
+                    /*
                     //재생목록에서 역순으로 제거후 localstorage에 저장
                     checkedSongs = checkedSongs.reverse();
                     for(let idx of checkedSongs)                               //역순으로 해당 곡들 제거 
                         this.playlist.splice(idx,1);                           //태그요소제거
                     localStorage.setItem('playlist', JSON.stringify(this.playlist)); //plsylist도 요소 제거 
-                
+                    */
                 }
 
             }.bind(this));
